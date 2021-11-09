@@ -12,4 +12,8 @@ class rest extends Model
     protected $table = 'rests';
 
     protected $fillable = ['work_id', 'breakIn', 'breakOut', 'id'];
+
+    public function work() {
+        return $this->belongsTo(work::class);
+    }
 }

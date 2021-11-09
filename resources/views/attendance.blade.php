@@ -144,44 +144,91 @@
       background: white;
       padding-top: 22.5px;
     }
-    
-    .stamp {
-      background:white;
-      margin: 10px;
-      border-radius: 3px;
-      font-size: 24px;
-      width: 560px;
-      height: 9em;
-      border-radius: 3px;
-      border: none;
+
+    main {
+      min-height: calc(100vh - 67.5px);
     }
-    @media screen and (min-width: 1222px) {
+    
+    .message {
+      text-align: center;
+      font-size: 20px;
+    }
+
+    /* @media screen and (min-width: 1222px) {
       main {
         min-height: calc(100vh - 67.5px);
       }
+    } */
+
+    table {
+      width: 85%;
+      margin: 25px auto;
+    }
+    th {
+      padding: 25px;
+    }
+
+    td {
+      padding: 25px;
+    }
+    tr {
+      border-top: gray 1px solid;
+    }
+
+    .date-line {
+      text-align: center;
+    }
+    .date {
+      font-size: 25px;
     }
   </style>
 
 <body>
-<header>
-      <h1>Atte</h1>
+  <main>
+    <header>
+    <h1>Atte</h1>
       <nav>
         <a href="/">ホーム</a>
         <a href="/attendance">日付一覧</a>
         <a href="/logout">ログアウト</a>
       </nav>
     </header>
-  <table>
-    @foreach ($items as $item)
-    <tr>
-      <td>勤怠開始</td><td>{{ $item->punchIn }}</td>
-      <td>勤怠終了</td><td>{{ $item->punchOut }}</td>
-      <td>休憩開始</td><td>{{ $item->breakIn }}</td>
-      <td>休憩開始</td><td>{{ $item->breakOut }}</td>
-    </tr>
-    @endforeach
-  </table>
 
+    <p class="message">{{ session('message') }}</p>
+    
+    <div class="date-line">
+      {{ $allDate->links() }}
+      @foreach($allDate as $date)
+          <h1 class="date">{{ $date->date }}</h1>
+      @endforeach
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="table-title">名前</th>
+          <th class="table-title">勤怠開始</th>
+          <th class="table-title">勤怠終了</th>
+          <th class="table-title">休憩時間</th>
+          <th class="table-title">勤務時間</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach ($users as $user)
+        <tr>
+          <td class="table-item">{{ $user->name }}</td>
+          <td class="table-item">{{ $user->punchIn }}</td>
+          <td class="table-item">{{ $user->punchOut }}</td>
+          <td class="table-item">{{ $user->name }}</td>
+          <td class="table-item">{{ $workingMinute }}</td>
+        </tr>
+          @endforeach
+      </tbody>
+    </table>
+    <div class="userPage">
+      {{ $users->appends(request()->input())->links() }}
+    </div>
+  </main>
   <footer>
     Atte,inc
   </footer>

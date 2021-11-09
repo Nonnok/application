@@ -44,7 +44,7 @@ class AtteController extends Controller
             'date' => Carbon::today(),
         ]);
 
-        return redirect('/');
+        return redirect('/')->back()->with('message', '勤怠を開始します');
     }
 
     public function timeout() {
@@ -85,8 +85,8 @@ class AtteController extends Controller
                 }
             } 
         }else {
-                return redirect()->back()->with('message', '出勤打刻がされていません');
-            }
+             return redirect()->back()->with('message', '出勤打刻がされていません');
+        }
     }
 
     // 休憩開始
