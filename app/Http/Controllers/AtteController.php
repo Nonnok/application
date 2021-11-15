@@ -102,6 +102,7 @@ class AtteController extends Controller
                     $breakIn = new Carbon($restTimestamp->breakIn);
                     $breakOut = new Carbon($restTimestamp->breakOut);
                     $rest_time = $breakIn->diffInMinutes($breakOut);
+                    // TODO https://carbon.nesbot.com/docs/#api-difference ここを見て戻り値がNullになるケースを考える
                     
                     $restTimestamp->update([
                         'rest_time' => $rest_time
