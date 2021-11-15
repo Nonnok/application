@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Models\work;
 use App\Models\rest;
 
-use function GuzzleHttp\Promise\all;
+
 
 class CheckController extends Controller
 {
@@ -20,14 +20,14 @@ class CheckController extends Controller
         $workTable = Date::get()->first();
 
         if(!$workTable) {
-            return redirect('attendance')->back()->with('message', '勤怠履歴がありません');
+            return redirect('attendance')->with('message', '勤怠履歴がありません');
         }
         
         $users = work::join('users', 'users.id', 'user_id')
                     ->get();
 
         $allDate = Date::select('date')
-        ->simplePaginate(1, ["*"], 'datePage');
+                    ->simplePaginate(1, ["*"], 'datePage');
 
         foreach($allDate as $date) {
             $date->date;
@@ -38,18 +38,6 @@ class CheckController extends Controller
                     ->paginate(5, ["*"], 'userPage');
 
 
-        $user = Auth::user();
-        $timeOut = work::where('user_id', $user->id)->latest()->first();
-
-        $now = new Carbon();
-        $punchIn = new Carbon($timeOut->punchIn);
-        $breakIn = new Carbon($timeOut->breakIn);
-        $breakOut = new Carbon($timeOut->breakOut);
-
-        $workTime = $punchIn->diffInMinutes($now);
-        $breakTime = $breakIn->diffInMinutes($breakOut);
-        $workingMinute = $workTime - $breakTime;
-
-        return view('attendance', compact('allDate', 'users', 'workingMinute'));
+        return view('attendance', compact('allDate', 'users'));
     }
 }

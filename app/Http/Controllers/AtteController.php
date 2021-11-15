@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\work;
 use App\Models\rest;
+use App\Models\Date;
 
 class AtteController extends Controller
 {
@@ -47,45 +48,132 @@ class AtteController extends Controller
         return redirect('/')->back()->with('message', '勤怠を開始します');
     }
 
+    // 退勤打刻
     public function timeout() {
         $user = Auth::user();
-        $timeOut = work::where('user_id', $user->id)->latest()->first();
+        $workTimestamp = work::where('user_id', $user->id)->latest()->first();
 
-        $now = new Carbon();
-        $punchIn = new Carbon($timeOut->punchIn);
-        $breakIn = new Carbon($timeOut->breakIn);
-        $breakOut = new Carbon($timeOut->breakOut);
+        if (!$workTimestamp) {
+            return redirect()->back()->with('message', '出勤打刻がされていません');
+        }
 
-        $workTime = $punchIn->diffInMinutes($now);
-        $breakTime = $breakIn->diffInMinutes($breakOut);
-        $workingMinute = $workTime - $breakTime;
+        $dateStamp = Date::latest()->first();
+        $workTimestamp = work::where('user_id', $user->id)->latest()->first();
 
-        $workingHour = ceil($workingMinute / 15) * 0.25;
+        $latestDateStamp = work::where('user_id', $user->id)->latest()->first();
 
-        if($timeOut) {
-            if(empty($timeOut->punchOut)) {
-                if($timeOut->breakIn && $timeOut->breakOut) {
-                    return redirect() -> back()->with('message', '休憩終了が打刻されていません');
-                } else {
+        if ($latestDateStamp) {
+
+            $punchIn = new Carbon($workTimestamp->punchIn);
+
+            if ($workTimestamp->punchOut) {
+
+                return redirect()->back()->with('message', '退勤打刻済みです');
+
+            } elseif(!$workTimestamp->punchOut) {
+
+                $restTimestamp = rest::where('work_id', $latestDateStamp->id)->latest()->first();
+
+                if (!$restTimestamp) {
+
                     $timeOut->update([
                         'punchOut' => Carbon::now(),
-                        'workTime' => $workingHour,
                     ]);
-                    return redirect()->back()->with('message', 'お疲れ様でした');
+
+                    $workTimestamp = work::where('user_id', $user->id)->latest()->first();
+                    $punchOut = new carbon ($workTimestamp->punchOut);
+                    $work_time = $punchIn->diffInMinutes($punchOut);
+                    $workingHour = round(($work_time / 10) * 0.166, 3);
+
+                    $workTimestamp->update([
+                        'work_time' => $workingHour
+                    ]);
+
+                    return redirect()->back()->with('message', '退勤打刻が完了しました');
+
+                } elseif (!$restTimestamp->breakOut) {
+
+                    $restTimestamp = rest::where('work_id', $latestDateStamp)->latest()->first();
+
+                    $restTimestamp -> update([
+                        'breakOut' => Carbon::now(),
+                    ]);
+
+                    $breakIn = new Carbon($restTimestamp->breakIn);
+                    $breakOut = new Carbon($restTimestamp->breakOut);
+                    $rest_time = $breakIn->diffInMinutes($breakOut);
+                    
+                    $restTimestamp->update([
+                        'rest_time' => $rest_time
+                    ]);
+                    $rest_time_total = rest::where('work_id', $workTimestamp->id)->sum('rest_time');
+                    $workTimestamp->update([
+                        'total_rest_time' => $rest_time_total,
+                    ]);
+
+                    $workTimestamp->update([
+                        'punchOut' => Carbon::now(),
+                    ]);
+
+                    $workTimestamp = work::where('user_id', $user->id)->latest()->first();
+
+                    $punchOut = new carbon($workTimestamp->punchOut);
+                    $work_time = $start_work->diffInMinutes($punchOut);
+                    $workingHour = round(($work_time / 10) * 0.166, 3);
+
+                    $workTimestamp->update([
+                        'work_time' => $workingHour
+                    ]);
+
+                    return redirect()->back()->with('message', '退勤打刻が完了しました');
+                } elseif ($restTimestamp) {
+                    if ($restTimestamp->breakOut) {
+
+                        $rest_time_total = Rest::where('work_id', $workTimestamp->id)->sum('rest_time');
+                        $timeOut->update([
+                            'rest_time' => $rest_time_total
+                        ]);
+
+                        $timeOut->update([
+                            'punchOut' => Carbon::now()
+                        ]);
+
+                        $workTimestamp = work::where('user_id', $user->id)->latest()->first();
+                        $punchOut = new carbon($workTimestamp->punchOut);
+                        $work_time = $punchIn->diffInMinutes($punchOut);
+
+                        $workTimestamp->update([
+                            'work_time' => $workingHour
+                        ]);
+
+                        return redirect()->back()->with('message', '退勤打刻が完了しました');
+                    }
                 }
+            }
+        } elseif (!$latestDateStamp) {
+            $latestDate = $dateStamp->date;
+            $todayTimestamp = Carbon:: now();
+            $timeout = work::where('user_id', $user->id)->latest()->first();
+
+            if ($timeout->punchIn && !$timeout->punchOut && ($latestDate !== $todayTimestamp)) {
+                Date::create([
+                    'date' => Carbon::today(),
+                ]);
+
+                $workDate = Date::latest()->first();
+
+                work::create ([
+                    'user_id' => $user->id,
+                    'user_name' => $user->name,
+                    'punchIn' => Carbon::now(),
+                ]);
+
+                $timeout = work::where('user_id', $user->id)->latest()->first();
+
+                return redirect()->back()->with('message', '日を跨いだため翌日の出勤打刻に移行します');
             } else {
-                $today = new Carbon();
-                $day = $today->day;
-                $oldPunchOut = new Carbon();
-                $oldPunchOutDay = $oldPunchOut->day;
-                if ($day == $oldPunchOutDay) {
-                    return redirect()->back()->with('message', '退勤打刻済みです');
-                } else {
-                    return redirect()->back()->with('message', '出勤打刻をしてください');
-                }
-            } 
-        }else {
-             return redirect()->back()->with('message', '出勤打刻がされていません');
+                return redirect()->back()->with('message', ('出勤打刻がされていません'));
+            }
         }
     }
 

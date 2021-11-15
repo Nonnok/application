@@ -13,6 +13,8 @@ class rest extends Model
 
     protected $fillable = ['work_id', 'breakIn', 'breakOut', 'id'];
 
+    protected $dates = ['breakIn', 'breakOut'];
+
     public function work() {
         return $this->belongsTo(work::class);
     }

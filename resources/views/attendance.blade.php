@@ -217,10 +217,25 @@
         @foreach ($users as $user)
         <tr>
           <td class="table-item">{{ $user->name }}</td>
-          <td class="table-item">{{ $user->punchIn }}</td>
-          <td class="table-item">{{ $user->punchOut }}</td>
-          <td class="table-item">{{ $user->name }}</td>
-          <td class="table-item">{{ $workingMinute }}</td>
+          <td class="table-item">{{ $user->punchIn->format('H:i:s') }}</td>
+
+          @if ($user->punchOut == null)
+            <td class="table-item">{{ $user->punchOut }}</td>
+            @else
+            <td class="table-item">{{ $user->punchOut->format('H:i:s') }}</td>
+          @endif
+
+          @if ($user->total_rest_time == null)
+            <td class="table-item">{{ $user->total_rest_time }}</td>
+            @else
+            <td class="table-item">{{ $user->total_rest_time->format('H:i:s') }}</td>
+          @endif
+
+          @if ($user->work_time == null)
+            <td class="table-item">{{ $user->work_time }}</td>
+            @else
+            <td class="table-item">{{ $user->work_time->format('H:i:s') }}</td>
+          @endif
         </tr>
           @endforeach
       </tbody>
