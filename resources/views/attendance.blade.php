@@ -5,6 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>日付一覧</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css">
 </head>
 
 <style>
@@ -189,6 +191,8 @@
   </style>
 
 <body>
+
+<div id="app"></div>
   <main>
     <header>
     <h1>Atte</h1>
@@ -247,5 +251,7 @@
   <footer>
     Atte,inc
   </footer>
+
+  <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>
