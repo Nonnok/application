@@ -18,8 +18,6 @@ class CreateWorksTable extends Migration
             $table->foreignId('user_id');
             $table->dateTime('punchIn')->nullable();
             $table->dateTime('punchOut')->nullable();
-            $table->float('work_time')->nullable();
-            $table->float('total_rest_time')->nullable();
             $table->date('date');
             $table->timestamp('created_at')->useCurrent()->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();

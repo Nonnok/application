@@ -5,6 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>日付一覧</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css">
 </head>
 
 <style>
@@ -177,13 +179,20 @@
 
     .date-line {
       text-align: center;
+      margin-top: 24px;
     }
     .date {
       font-size: 25px;
     }
+
+    .table-item {
+      text-align: center;
+    }
   </style>
 
 <body>
+
+<div id="app"></div>
   <main>
     <header>
     <h1>Atte</h1>
@@ -199,7 +208,7 @@
     <div class="date-line">
       {{ $allDate->links() }}
       @foreach($allDate as $date)
-          <h1 class="date">{{ $date->date }}</h1>
+          <h1 class="date">{{ $date->date->format('Y-m-d') }}</h1>
       @endforeach
     </div>
 
@@ -214,38 +223,35 @@
         </tr>
       </thead>
       <tbody>
-        @foreach ($users as $user)
+        @foreach ($works as $work)
         <tr>
-          <td class="table-item">{{ $user->name }}</td>
-          <td class="table-item">{{ $user->punchIn->format('H:i:s') }}</td>
+          <td class="table-item">{{ $work->name }}</td>
+          <td class="table-item">{{ $work->punchIn->format('H:i:s') }}</td>
 
-          @if ($user->punchOut == null)
-            <td class="table-item">{{ $user->punchOut }}</td>
+          @if ($work->punchOut == null)
+            <td class="table-item">記録なし</td>
             @else
-            <td class="table-item">{{ $user->punchOut->format('H:i:s') }}</td>
+            <td class="table-item">{{ $work->punchOut->format('H:i:s') }}</td>
           @endif
 
-          @if ($user->total_rest_time == null)
-            <td class="table-item">{{ $user->total_rest_time }}</td>
-            @else
-            <td class="table-item">{{ $user->total_rest_time->format('H:i:s') }}</td>
+          @if (!empty($work->work_id))
+            <td class="table-item">{{ gmdate("H:i:s",$work->sum_rest_time) }}</td>
+          @else
+            <td class="table-item">記録なし</td>
           @endif
-
-          @if ($user->work_time == null)
-            <td class="table-item">{{ $user->work_time }}</td>
-            @else
-            <td class="table-item">{{ $user->work_time->format('H:i:s') }}</td>
-          @endif
+            <td class="table-item">{{ gmdate("H:i:s",(strtotime($allDate.$work->punchOut)-strtotime($allDate.$work->punchIn))) }}</td>
         </tr>
           @endforeach
       </tbody>
     </table>
-    <div class="userPage">
-      {{ $users->appends(request()->input())->links() }}
+    <div class="workPage">
+      {{ $works->appends(request()->input())->links() }}
     </div>
   </main>
   <footer>
     Atte,inc
   </footer>
+
+  <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

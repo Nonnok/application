@@ -13,25 +13,16 @@ class work extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['user_id', 'punchIn', 'punchOut', 'date', 'id', 'worktime'];
+    protected $fillable = [
+        'user_id',
+        'punchIn',
+        'punchOut',
+        'date',
+        'id',
+        'work_time',
+    ];
 
     protected $dates = ['punchIn', 'punchOut', 'date'];
-
-    public function worktime() {
-
-        $user = Auth::user();
-        $timeOut = work::where('user_id', $user->id)->latest()->first();
-        $punchIn = new Carbon($timeOut->punchIn);
-        $punchOut = new Carbon($timeOut->punchOut);
-        $breakIn = new Carbon($timeOut->breakIn);
-        $breakOut = new Carbon($timeOut->breakOut);
-
-        $workTime = $punchIn->diffInMinutes($now);
-        $breakTime = $breakIn->diffInMinutes($breakOut);
-        $workingMinute = $workTime - $breakTime;
-
-        $workingHour = ceil($workingMinute / 15) * 0.25;
-    }
 
     public function user()
     {
