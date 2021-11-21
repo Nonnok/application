@@ -17,18 +17,19 @@ class CheckController extends Controller
     public function atte()
     {
         $users = Auth::user();
+
+        $date = work::select('date')->join('users', 'users.id', 'user_id');
         
         $workdate = work::select('date')->get();
         if (!$workdate) {
             return redirect()->back()->with('message', '勤怠履歴がありません');
         }
         
-        $rests=rest::select('work_id',DB::raw('SUM(rest_time) as sum_rest_time'))->groupBy('work_id');
+        $rests = rest::select('work_id',DB::raw('SUM(rest_time) as sum_rest_time'))->groupBy('work_id');
         
-        $works = work::join('users', 'users.id', 'user_id')
-        ->get();
-        
-        $allDate = work::select('date')->simplePaginate(1, ["*"], 'datePage');
+        $allDate = work::select('date')
+            ->join('users', 'users.id', 'user_id')
+            ->simplePaginate(1, ["*"], 'datePage');
         
         foreach($allDate as $date) {
             $date->date;
@@ -36,11 +37,11 @@ class CheckController extends Controller
 
         
         $works = work::join('users', 'users.id', 'user_id')
-        ->leftJoinSub($rests,'rests',function ($join){
-            $join->on('works.id','=','rests.work_id');
-        })
-        ->where('date', $date->date)
-        ->orderBy('works.updated_at', 'asc')
+            ->leftJoinSub($rests,'rests',function ($join){
+                $join->on('works.id','=','rests.work_id');
+            })
+            ->where('date', $date->date)
+            ->orderBy('works.updated_at', 'asc')
             ->paginate(5, ["*"], 'userPage');
 
         return view('attendance', compact('works', 'allDate'));

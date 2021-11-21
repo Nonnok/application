@@ -19,7 +19,7 @@ class work extends Model
         'punchOut',
         'date',
         'id',
-        'total_work',
+        'work_time',
     ];
 
     protected $dates = ['punchIn', 'punchOut', 'date'];

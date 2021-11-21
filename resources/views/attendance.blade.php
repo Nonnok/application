@@ -177,9 +177,14 @@
 
     .date-line {
       text-align: center;
+      margin-top: 24px;
     }
     .date {
       font-size: 25px;
+    }
+
+    .table-item {
+      text-align: center;
     }
   </style>
 
@@ -230,7 +235,7 @@
           @else
             <td class="table-item">記録なし</td>
           @endif
-            <td class="table-item">{{ gmdate("H:i:s",(strtotime($date.$work->punchOut)-strtotime($date.$work->punchIn))) }}</td>
+            <td class="table-item">{{ gmdate("H:i:s",(strtotime($allDate.$work->punchOut)-strtotime($allDate.$work->punchIn))) }}</td>
         </tr>
           @endforeach
       </tbody>
