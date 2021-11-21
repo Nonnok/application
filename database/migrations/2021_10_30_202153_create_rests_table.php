@@ -17,9 +17,9 @@ class CreateRestsTable extends Migration
             $table->id();
             $table->bigInteger('work_id')->unsigned();
             $table->foreign('work_id')->references('id')->on('works');
-            $table->float('rest_time')->nullable();
             $table->dateTime('breakIn')->nullable();
             $table->dateTime('breakOut')->nullable();
+            $table->integer('rest_time')->nullable();
             $table->timestamp('created_at')->useCurrent()->nullable();
             $table->timestamp('updated_at')->useCurrent()->nullable();
         });

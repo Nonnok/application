@@ -11,7 +11,7 @@ class rest extends Model
 
     protected $table = 'rests';
 
-    protected $fillable = ['work_id', 'breakIn', 'breakOut', 'id'];
+    protected $fillable = ['work_id', 'breakIn', 'breakOut', 'id', 'rest_time'];
 
     protected $dates = ['breakIn', 'breakOut'];
 

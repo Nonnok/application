@@ -39,5 +39,5 @@ Route::get('/logout', [LoginController::class, 'logout'])
   ->name('logout');
 
 // 日付別勤怠ページ
-Route::get('/attendance', [CheckController::class, 'index'])->name('index');
-Route::post('/attendance', [CheckController::class, 'index'])->name('index');
+Route::get('/attendance', [CheckController::class, 'atte'])->name('attendance');
+Route::post('/attendance', [CheckController::class, 'atte'])->name('attendance');

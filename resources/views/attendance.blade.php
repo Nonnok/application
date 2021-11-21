@@ -199,7 +199,7 @@
     <div class="date-line">
       {{ $allDate->links() }}
       @foreach($allDate as $date)
-          <h1 class="date">{{ $date->date }}</h1>
+          <h1 class="date">{{ $date->date->format('Y-m-d') }}</h1>
       @endforeach
     </div>
 
@@ -214,34 +214,29 @@
         </tr>
       </thead>
       <tbody>
-        @foreach ($users as $user)
+        @foreach ($works as $work)
         <tr>
-          <td class="table-item">{{ $user->name }}</td>
-          <td class="table-item">{{ $user->punchIn->format('H:i:s') }}</td>
+          <td class="table-item">{{ $work->name }}</td>
+          <td class="table-item">{{ $work->punchIn->format('H:i:s') }}</td>
 
-          @if ($user->punchOut == null)
-            <td class="table-item">{{ $user->punchOut }}</td>
+          @if ($work->punchOut == null)
+            <td class="table-item">記録なし</td>
             @else
-            <td class="table-item">{{ $user->punchOut->format('H:i:s') }}</td>
+            <td class="table-item">{{ $work->punchOut->format('H:i:s') }}</td>
           @endif
 
-          @if ($user->total_rest_time == null)
-            <td class="table-item">{{ $user->total_rest_time }}</td>
-            @else
-            <td class="table-item">{{ $user->total_rest_time->format('H:i:s') }}</td>
+          @if (!empty($work->work_id))
+            <td class="table-item">{{ gmdate("H:i:s",$work->sum_rest_time) }}</td>
+          @else
+            <td class="table-item">記録なし</td>
           @endif
-
-          @if ($user->work_time == null)
-            <td class="table-item">{{ $user->work_time }}</td>
-            @else
-            <td class="table-item">{{ $user->work_time->format('H:i:s') }}</td>
-          @endif
+            <td class="table-item">{{ gmdate("H:i:s",(strtotime($date.$work->punchOut)-strtotime($date.$work->punchIn))) }}</td>
         </tr>
           @endforeach
       </tbody>
     </table>
-    <div class="userPage">
-      {{ $users->appends(request()->input())->links() }}
+    <div class="workPage">
+      {{ $works->appends(request()->input())->links() }}
     </div>
   </main>
   <footer>
