@@ -188,11 +188,18 @@
     .table-item {
       text-align: center;
     }
+
+    nav {
+      display: flex;
+      justify-content: center;
+    }
   </style>
 
 <body>
 
-<div id="app"></div>
+<!-- create_userpage -->
+
+  <div id="app"></div>
   <main>
     <header>
     <h1>Atte</h1>
@@ -205,7 +212,7 @@
 
     <p class="message">{{ session('message') }}</p>
     
-    <div class="date-line">
+    <div class="date-line mx-auto">
       {{ $allDate->links() }}
       @foreach($allDate as $date)
           <h1 class="date">{{ $date->date->format('Y-m-d') }}</h1>
@@ -239,12 +246,12 @@
           @else
             <td class="table-item">記録なし</td>
           @endif
-            <td class="table-item">{{ gmdate("H:i:s",(strtotime($allDate.$work->punchOut)-strtotime($allDate.$work->punchIn))) }}</td>
+            <td class="table-item">{{ gmdate("H:i:s",(strtotime($work->punchOut)-strtotime($work->punchIn))) }}</td>
         </tr>
           @endforeach
       </tbody>
     </table>
-    <div class="workPage">
+    <div class="workPage mx-auto">
       {{ $works->appends(request()->input())->links() }}
     </div>
   </main>
