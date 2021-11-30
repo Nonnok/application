@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>日付一覧</title>
+  <title>ユーザーページ</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link href="{{ mix('css/app.css') }}" rel="stylesheet" type="text/css">
 </head>
@@ -193,6 +193,19 @@
       display: flex;
       justify-content: center;
     }
+    
+    .month {
+      text-align: center;
+      font-size: 24px;
+    }
+    
+    .month nav {
+      font-size: 16px;
+    }
+
+    .date {
+      font-weight: bold;
+    }
   </style>
 
 <body>
@@ -213,9 +226,12 @@
 
     <p class="message">{{ session('message') }}</p>
     
-    <div class="date-line">
+    <div class="date-line mx-auto">
+    </div>
+
+    <div class="month">
       @foreach($allDate as $date)
-      <h1 class="date">{{ $date->date->format('Y-m-d') }}</h1>
+      <h1 class="date">{{ $date->date->format('m') }}月</h1>
       @endforeach
       {{ $allDate->links() }}
     </div>
@@ -223,7 +239,7 @@
     <table>
       <thead>
         <tr>
-          <th class="table-title">名前</th>
+          <th class="table-title">日</th>
           <th class="table-title">勤怠開始</th>
           <th class="table-title">勤怠終了</th>
           <th class="table-title">休憩時間</th>
@@ -231,9 +247,9 @@
         </tr>
       </thead>
       <tbody>
-        @foreach ($works as $work)
+        @foreach ($myworks as $work)
         <tr>
-          <td class="table-item">{{ $work->name }}</td>
+          <td class="table-item">{{ $work->date->format('d') }}</td>
           <td class="table-item">{{ $work->punchIn->format('H:i:s') }}</td>
 
           @if ($work->punchOut == null)
@@ -253,7 +269,7 @@
       </tbody>
     </table>
     <div class="workPage mx-auto">
-      {{ $works->appends(request()->input())->links() }}
+      {{ $myworks->appends(request()->input())->links() }}
     </div>
   </main>
   <footer>

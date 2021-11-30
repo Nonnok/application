@@ -214,6 +214,7 @@
       <nav>
         <a href="/">ホーム</a>
         <a href="/attendance">日付一覧</a>
+        <a href="/userpage">ユーザーページ</a>
         <a href="/logout">ログアウト</a>
       </nav>
     </header>

@@ -41,3 +41,7 @@ Route::get('/logout', [LoginController::class, 'logout'])
 // 日付別勤怠ページ
 Route::get('/attendance', [CheckController::class, 'atte'])->name('attendance');
 Route::post('/attendance', [CheckController::class, 'atte'])->name('attendance');
+
+// ユーザーページ
+Route::get('/userpage', [CheckController::class, 'userpage'])->name('userpage');
+Route::post('/userpage', [CheckController::class, 'userpage'])->name('userpage');
