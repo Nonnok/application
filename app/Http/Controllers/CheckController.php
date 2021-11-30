@@ -52,19 +52,20 @@ class CheckController extends Controller
     public function userpage()
     {
         $user = Auth::user();
-        $date = date('m');
+        $date = date('Y-m-d');
         $stampDate = work::select('date')->get();
         if(!$stampDate) {
             return redirect()->back()->with('message', '勤怠記録がありません');
         }
 
-        $allDate = work::select('date')  
+        $month = date('Y-m-d');
+        $allDate = work::whereMonth('date', $month)
             ->distinct()
             ->simplePaginate(1, ["*"], 'datePage');
 
         foreach($allDate as $date) {
             $date->date;
-        }
+        }    
 
         $rests = rest::select('work_id', DB::raw('SUM(rest_time) as sum_rest_time'))->groupBy('work_id');
 
