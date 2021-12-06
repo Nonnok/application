@@ -7,7 +7,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>@yield('title')</title>
-  <link rel="stylesheet" type="text/css" href="{{ mix('css/reset.css') }}">
+  <!-- <link rel="stylesheet" type="text/css" href="{{ mix('css/reset.css') }}"> -->
   <link rel="stylesheet" href="{{ mix('css/regist.css') }}">
 </head>
 <body>
