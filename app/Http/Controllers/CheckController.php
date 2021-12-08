@@ -53,10 +53,10 @@ class CheckController extends Controller
         if(!$stampDate) {
             return redirect()->back()->with('message', '勤怠記録がありません');
         }
-        
+
         $allDate = Work::select('date')
             ->distinct()
-            ->simplePaginate(1, ["*"], 'datePage');
+            ->simplePaginate(30, ["*"], 'datePage');
         
         foreach($allDate as $Date) {
             $Date -> date;
