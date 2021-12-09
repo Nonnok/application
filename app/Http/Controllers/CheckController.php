@@ -77,10 +77,7 @@ class CheckController extends Controller
     }
 
     public function userlist() {
-        $user = Auth::user();
-        $rests = Rest::select('work_id', DB::raw('SUM(rest_time) as sum_rest_time'));
-
-        $users = Auth::user()
+        $users = DB::table('users')
             ->paginate(5);
         return view('userlist', compact('users'));
     }
