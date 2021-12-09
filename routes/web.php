@@ -58,4 +58,7 @@ Route::get('/userpage', [CheckController::class, 'userpage'])->name('userpage');
 Route::post('/userpage', [CheckController::class, 'userpage'])->name('userpage');
 Auth::routes();
 
+// ユーザーリスト
+Route::get('/userlist', [CheckController::class, 'userlist']);
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

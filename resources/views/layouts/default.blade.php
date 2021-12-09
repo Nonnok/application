@@ -24,6 +24,7 @@
           <li><a href="/">ホーム</a></li>
           <li><a href="/attendance">日付一覧</a></li>
           <li><a href="/userpage">ユーザーページ</a></li>
+          <li><a href="/userlist">ユーザー一覧</a></li>
           <li><a href="/logout">ログアウト</a></li>
         </ul>
       </div>
@@ -33,6 +34,7 @@
       <a href="/">ホーム</a>
       <a href="/attendance">日付一覧</a>
       <a href="/userpage">ユーザーページ</a>
+      <a href="/userlist">ユーザー一覧</a>
       <a href="/logout">ログアウト</a>
     </nav>
   </header>

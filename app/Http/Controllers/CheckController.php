@@ -75,4 +75,13 @@ class CheckController extends Controller
             ->paginate(5);
         return view('userpage', compact('myworks', 'allDate'));
     }
+
+    public function userlist() {
+        $user = Auth::user();
+        $rests = Rest::select('work_id', DB::raw('SUM(rest_time) as sum_rest_time'));
+
+        $users = Auth::user()
+            ->paginate(5, ["*"], 'userList');
+        return view('userlist', compact('users'));
+    }
 }
