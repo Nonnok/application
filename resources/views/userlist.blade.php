@@ -9,7 +9,7 @@
       <tbody>
         @foreach ($users as $user)
         <tr>
-          <td class="table-item">{{ $user->name }}</td>
+          <td class="table-item user-name">{{ $user->name }}</td>
           @endforeach
       </tbody>
     </table>
