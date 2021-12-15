@@ -21,5 +21,5 @@ class Work extends Model
         'month'
     ];
 
-    protected $dates = ['punchIn', 'punchOut', 'date'];
+    protected $dates = ['punchIn', 'punchOut', 'date', 'allDate', 'stampdate'];
 }

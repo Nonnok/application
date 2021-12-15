@@ -28,7 +28,7 @@ class CheckController extends Controller
         
         $allDate = Work::select('date')
             ->distinct()
-            ->simplePaginate(1, ["*"], 'datePage');
+            ->simplePaginate(1, ["*"],'datePage');
         
         foreach($allDate as $date) {
             $date->date;
@@ -46,21 +46,28 @@ class CheckController extends Controller
     }
 
 
-    public function userpage(Request $request)
+    public function userpage()
     {
         $user = Auth::user();
-        $stampDate = Work::select('date')->get();
-        if(!$stampDate) {
+        $workDate = Work::select('date')->first();
+        if(!$workDate) {
             return redirect()->back()->with('message', '勤怠記録がありません');
         }
 
-        $allDate = Work::select('date')
-            ->distinct()
-            ->simplePaginate(30, ["*"], 'datePage');
-        
-        foreach($allDate as $Date) {
-            $Date -> date;
+        $whereYear = date('Y');
+
+        $allDate = Work::whereYear('date', $whereYear)
+            ->orderBy('updated_at', 'asc')
+            ->groupBy(function ($row) {
+                $row->date->format('Y-m');
+            })
+            ->simplePaginate(1, ["*"], 'datePage');
+            
+
+        foreach($allDate as $date) {
+            $date -> date;
         }
+    
 
         $rests = Rest::select('work_id', DB::raw('SUM(rest_time) as sum_rest_time'))->groupBy('work_id');
 
@@ -69,7 +76,7 @@ class CheckController extends Controller
                 $join->on('works.id', '=', 'rests.work_id');
             })
             ->where('user_id', $user->id)
-            ->whereMonth('date', $Date->date)
+            ->whereMonth('date', $date->date)
             ->distinct()
             ->orderBy('works.updated_at', 'asc')
             ->paginate(5);

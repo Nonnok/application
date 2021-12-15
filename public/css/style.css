@@ -1,14 +1,14 @@
-body {
+main {
   background: whitesmoke;
+  min-height: calc(100vh - 151.5px);
 }
-
 input, select {
-  vertical-align:middle;
+  vertical-align: middle;
 }
 
 header {
   background: white;
-  height: 80px;
+  height: 86px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -44,7 +44,7 @@ a {
 footer {
   width: 100%;
   text-align: center;
-  height: 45px;
+  height: 65px;
   background: white;
   padding-top: 22.5px;
 }
@@ -53,10 +53,7 @@ table {
   width: 85%;
   margin: 25px auto;
 }
-th {
-  padding: 25px;
-}
-td {
+th, td {
   padding: 25px;
 }
 tr {
@@ -65,7 +62,6 @@ tr {
 
 .date-line {
   text-align: center;
-  margin-top: 24px;
 }
 .date {
   font-size: 25px;
@@ -74,15 +70,6 @@ tr {
 
 .table-item, .table-title {
   text-align: center;
-}
-
-.month {
-  text-align: center;
-  font-size: 24px;
-}
-
-.month .navigation {
-  font-size: 16px;
 }
 
 .elsep {
@@ -146,9 +133,6 @@ nav {
   font-size: 20px;
 }
 
-main {
-  min-height: calc(100vh - 151.5px);
-}
 
 @media screen and (min-width: 808px) {
   .buttons {
@@ -170,14 +154,8 @@ main {
   table {
     width: 100%;
   }
-  th {
+  th, td {
     padding: 10px;
-  }
-  td {
-    padding: 10px;
-  }
-  tr {
-    border-top: gray 1px solid;
   }
   .pc {
     display: none;
@@ -287,3 +265,4 @@ main {
       display: block;
     }
 }
+
