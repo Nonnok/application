@@ -54,20 +54,14 @@ class CheckController extends Controller
             return redirect()->back()->with('message', '勤怠記録がありません');
         }
 
-        $whereYear = date('Y');
-
-        $allDate = Work::whereYear('date', $whereYear)
-            ->orderBy('updated_at', 'asc')
-            ->groupBy(function ($row) {
-                $row->date->format('Y-m');
-            })
+        $allDate = Work::select('date')
+            ->groupBy('date')
             ->simplePaginate(1, ["*"], 'datePage');
-            
 
         foreach($allDate as $date) {
             $date -> date;
         }
-    
+
 
         $rests = Rest::select('work_id', DB::raw('SUM(rest_time) as sum_rest_time'))->groupBy('work_id');
 
